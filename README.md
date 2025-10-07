@@ -1,0 +1,1159 @@
+[fest2.html](https://github.com/user-attachments/files/22750462/fest2.html)
+git branch -M main<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-GoRhythm | Maslac Arts Fest 25</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff416c;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --codex: #FF6B6B;
+            --syntax: #4ECDC4;
+            --vertex: #45B7D1;
+            --logix: #96CEB4;
+        }
+        
+        body {
+            color: var(--dark);
+            line-height: 1.6;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><text x="50" y="200" font-family="Arial" font-size="80" font-weight="bold" fill="rgba(106,17,203,0.05)">AI-GoRhythm</text></svg>');
+            background-repeat: repeat;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        nav {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav li {
+            margin: 0 15px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .admin-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: #e03a5f;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .hero {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            min-height: 400px;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            position: relative;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .teams-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .team-card {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-card.codex {
+            background: linear-gradient(135deg, var(--codex), #ff8e8e);
+        }
+        
+        .team-card.syntax {
+            background: linear-gradient(135deg, var(--syntax), #7ee6df);
+        }
+        
+        .team-card.vertex {
+            background: linear-gradient(135deg, var(--vertex), #6ac9e6);
+        }
+        
+        .team-card.logix {
+            background: linear-gradient(135deg, var(--logix), #b4e6cb);
+        }
+        
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .team-points {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .categories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .category-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-header {
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .category-body {
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .leading-team {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .team-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .team-color.codex {
+            background-color: var(--codex);
+        }
+        
+        .team-color.syntax {
+            background-color: var(--syntax);
+        }
+        
+        .team-color.vertex {
+            background-color: var(--vertex);
+        }
+        
+        .team-color.logix {
+            background-color: var(--logix);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .results-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .position-group {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            grid-column: span 2;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .results-table th, .results-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .results-table th {
+            background-color: var(--light);
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .results-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .admin-dashboard {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .admin-panel {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .admin-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .admin-tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .admin-content {
+            display: none;
+        }
+        
+        .admin-content.active {
+            display: block;
+        }
+        
+        .close-admin {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .edit-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .student-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .student-info h3 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .student-points {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .student-house {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .house-codex {
+            background-color: var(--codex);
+            color: white;
+        }
+        
+        .house-syntax {
+            background-color: var(--syntax);
+            color: white;
+        }
+        
+        .house-vertex {
+            background-color: var(--vertex);
+            color: white;
+        }
+        
+        .house-logix {
+            background-color: var(--logix);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .results-form, .edit-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .position-group {
+                grid-column: span 1;
+                grid-template-columns: 1fr;
+            }
+            
+            button {
+                grid-column: span 1;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 5px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .admin-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="publicView">
+        <header>
+            <div class="container">
+                <div class="logo">AI-GoRhythm</div>
+                <div class="tagline">Maslac Arts Fest 25 | Where Algorithm Meets Art</div>
+            </div>
+        </header>
+        
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="#teams">Teams</a></li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="#students">Top Students</a></li>
+                    <li><a href="#leaderboard">Leaderboard</a></li>
+                </ul>
+                <button class="admin-btn" id="openAdmin">Admin Login</button>
+            </nav>
+            
+            <section class="hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;">
+                <div class="hero-content">
+                    <h1>The Algorithm is Controlling the Whole World</h1>
+                    <p>Our arts fest “AI–GoRhythm” is a creative celebration that explores the invisible patterns shaping our lives. Built on the theme “the algorithm is controlling the whole world,” it reflects how technology silently directs our choices, actions, and even emotions. Through performances, exhibitions, and artistic expressions, we aim to reveal the rhythm of control that surrounds us, reminding everyone that in today’s world, no one is completely free from influence. Algo–Rhythm is not just an event, but a powerful reminder of how deeply we are all intertwined with systems that guide our every step.</p>
+                </div>
+            </section>
+            
+            <section id="teams">
+                <h2>Team Standings</h2>
+                <div class="teams-container">
+                    <div class="team-card codex">
+                        <div class="team-name">Codex</div>
+                        <div class="team-points">2450</div>
+                    </div>
+                    <div class="team-card syntax">
+                        <div class="team-name">Syntax</div>
+                        <div class="team-points">2310</div>
+                    </div>
+                    <div class="team-card vertex">
+                        <div class="team-name">Vertex</div>
+                        <div class="team-points">2180</div>
+                    </div>
+                    <div class="team-card logix">
+                        <div class="team-name">Logix</div>
+                        <div class="team-points">2050</div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="categories">
+                <h2>Category Leaders</h2>
+                <div class="categories-container">
+                    <div class="category-card">
+                        <div class="category-header" style="background-color: #FF9E80;">Sub-Junior</div>
+                        <div class="category-body">
+                            <div class="leading-team">
+                                <div class="team-color syntax"></div>
+                                <div>Syntax - 650 points</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-header" style="background-color: #81C784;">Junior</div>
+                        <div class="category-body">
+                            <div class="leading-team">
+                                <div class="team-color codex"></div>
+                                <div>Codex - 720 points</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-header" style="background-color: #64B5F6;">Senior</div>
+                        <div class="category-body">
+                            <div class="leading-team">
+                                <div class="team-color vertex"></div>
+                                <div>Vertex - 580 points</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-header" style="background-color: #BA68C8;">Super Senior</div>
+                        <div class="category-body">
+                            <div class="leading-team">
+                                <div class="team-color logix"></div>
+                                <div>Logix - 620 points</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-header" style="background-color: #4DB6AC;">General</div>
+                        <div class="category-body">
+                            <div class="leading-team">
+                                <div class="team-color codex"></div>
+                                <div>Codex - 680 points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="students">
+                <h2>Top Students</h2>
+                <div class="search-container">
+                    <input type="text" class="search-box" id="studentSearch" placeholder="Search by name, ID, or house...">
+                </div>
+                <div id="studentsList">
+                    <!-- Student cards will be added here -->
+                </div>
+            </section>
+            
+            <section id="leaderboard">
+                <h2>Overall Leaderboard</h2>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Sub-Junior</th>
+                            <th>Junior</th>
+                            <th>Senior</th>
+                            <th>Super Senior</th>
+                            <th>General</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Codex</strong></td>
+                            <td>620</td>
+                            <td>720</td>
+                            <td>530</td>
+                            <td>500</td>
+                            <td>680</td>
+                            <td><strong>3050</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Syntax</strong></td>
+                            <td>650</td>
+                            <td>680</td>
+                            <td>540</td>
+                            <td>580</td>
+                            <td>610</td>
+                            <td><strong>3060</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vertex</strong></td>
+                            <td>580</td>
+                            <td>640</td>
+                            <td>580</td>
+                            <td>550</td>
+                            <td>590</td>
+                            <td><strong>2940</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Logix</strong></td>
+                            <td>610</td>
+                            <td>590</td>
+                            <td>530</td>
+                            <td>620</td>
+                            <td>570</td>
+                            <td><strong>2920</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>AI-GoRhythm | Maslac Arts Fest 25 | Where Algorithm Meets Art</p>
+            </div>
+        </footer>
+    </div>
+
+    <div id="adminDashboard" class="admin-dashboard">
+        <div class="admin-panel">
+            <div class="admin-header">
+                <h2>Admin Dashboard</h2>
+                <button class="close-admin" id="closeAdmin">Close Dashboard</button>
+            </div>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="results">Results Management</div>
+                <div class="admin-tab" data-tab="teams">Team Points</div>
+                <div class="admin-tab" data-tab="categories">Category Leaders</div>
+            </div>
+            
+            <div id="results-tab" class="admin-content active">
+                <h3>Upload Results</h3>
+                <form id="adminResultForm" class="results-form">
+                    <div class="form-group">
+                        <label for="adminStudentId">Student ID</label>
+                        <input type="text" id="adminStudentId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminStudentName">Student Name</label>
+                        <input type="text" id="adminStudentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminCategory">Category</label>
+                        <select id="adminCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="sub-junior">Sub-Junior</option>
+                            <option value="junior">Junior</option>
+                            <option value="senior">Senior</option>
+                            <option value="super-senior">Super Senior</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminTeam">House</label>
+                        <select id="adminTeam" required>
+                            <option value="">Select House</option>
+                            <option value="codex">Codex</option>
+                            <option value="syntax">Syntax</option>
+                            <option value="vertex">Vertex</option>
+                            <option value="logix">Logix</option>
+                        </select>
+                    </div>
+                    <div class="position-group">
+                        <div class="form-group">
+                            <label for="adminPosition">Position</label>
+                            <select id="adminPosition" required>
+                                <option value="">Select Position</option>
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminGrade">Grade</label>
+                            <select id="adminGrade" required>
+                                <option value="">Select Grade</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit">Upload Result</button>
+                </form>
+                
+                <h3 style="margin-top: 30px;">Recent Results</h3>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>House</th>
+                            <th>Position</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminResultsTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="teams-tab" class="admin-content">
+                <h3>Edit Team Points</h3>
+                <form class="edit-form" id="teamPointsForm">
+                    <div class="form-group">
+                        <label for="codexPoints">Codex Points</label>
+                        <input type="number" id="codexPoints" value="2450" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="syntaxPoints">Syntax Points</label>
+                        <input type="number" id="syntaxPoints" value="2310" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vertexPoints">Vertex Points</label>
+                        <input type="number" id="vertexPoints" value="2180" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="logixPoints">Logix Points</label>
+                        <input type="number" id="logixPoints" value="2050" required>
+                    </div>
+                    <button type="submit">Update Team Points</button>
+                </form>
+            </div>
+            
+            <div id="categories-tab" class="admin-content">
+                <h3>Edit Category Leaders</h3>
+                <form class="edit-form" id="categoryLeadersForm">
+                    <div class="form-group">
+                        <label for="subJuniorTeam">Sub-Junior Leader</label>
+                        <select id="subJuniorTeam" required>
+                            <option value="syntax">Syntax</option>
+                            <option value="codex">Codex</option>
+                            <option value="vertex">Vertex</option>
+                            <option value="logix">Logix</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subJuniorPoints">Sub-Junior Points</label>
+                        <input type="number" id="subJuniorPoints" value="650" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="juniorTeam">Junior Leader</label>
+                        <select id="juniorTeam" required>
+                            <option value="codex">Codex</option>
+                            <option value="syntax">Syntax</option>
+                            <option value="vertex">Vertex</option>
+                            <option value="logix">Logix</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="juniorPoints">Junior Points</label>
+                        <input type="number" id="juniorPoints" value="720" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="seniorTeam">Senior Leader</label>
+                        <select id="seniorTeam" required>
+                            <option value="vertex">Vertex</option>
+                            <option value="codex">Codex</option>
+                            <option value="syntax">Syntax</option>
+                            <option value="logix">Logix</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seniorPoints">Senior Points</label>
+                        <input type="number" id="seniorPoints" value="580" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="superSeniorTeam">Super Senior Leader</label>
+                        <select id="superSeniorTeam" required>
+                            <option value="logix">Logix</option>
+                            <option value="codex">Codex</option>
+                            <option value="syntax">Syntax</option>
+                            <option value="vertex">Vertex</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="superSeniorPoints">Super Senior Points</label>
+                        <input type="number" id="superSeniorPoints" value="620" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="generalTeam">General Leader</label>
+                        <select id="generalTeam" required>
+                            <option value="codex">Codex</option>
+                            <option value="syntax">Syntax</option>
+                            <option value="vertex">Vertex</option>
+                            <option value="logix">Logix</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="generalPoints">General Points</label>
+                        <input type="number" id="generalPoints" value="680" required>
+                    </div>
+                    
+                    <button type="submit">Update Category Leaders</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const publicView = document.getElementById('publicView');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const openAdminBtn = document.getElementById('openAdmin');
+        const closeAdminBtn = document.getElementById('closeAdmin');
+        const adminTabs = document.querySelectorAll('.admin-tab');
+        const adminContents = document.querySelectorAll('.admin-content');
+        const studentSearch = document.getElementById('studentSearch');
+        const studentsList = document.getElementById('studentsList');
+        
+        // Results tables
+        const adminResultsTableBody = document.getElementById('adminResultsTableBody');
+        
+        // Forms
+        const adminResultForm = document.getElementById('adminResultForm');
+        const teamPointsForm = document.getElementById('teamPointsForm');
+        const categoryLeadersForm = document.getElementById('categoryLeadersForm');
+        
+        // Team points elements
+        const teamPoints = {
+            codex: document.querySelector('.team-card.codex .team-points'),
+            syntax: document.querySelector('.team-card.syntax .team-points'),
+            vertex: document.querySelector('.team-card.vertex .team-points'),
+            logix: document.querySelector('.team-card.logix .team-points')
+        };
+        
+        // Category leader elements
+        const categoryLeaders = {
+            'sub-junior': document.querySelector('.category-card:nth-child(1) .leading-team'),
+            'junior': document.querySelector('.category-card:nth-child(2) .leading-team'),
+            'senior': document.querySelector('.category-card:nth-child(3) .leading-team'),
+            'super-senior': document.querySelector('.category-card:nth-child(4) .leading-team'),
+            'general': document.querySelector('.category-card:nth-child(5) .leading-team')
+        };
+        
+        // Student data
+        let students = [
+            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15 },
+            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12 },
+            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8 },
+            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10 },
+            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6 }
+        ];
+        
+        // Open Admin Dashboard
+        openAdminBtn.addEventListener('click', () => {
+            const password = prompt('Enter admin password:');
+            if (password === 'admin123') {
+                publicView.style.display = 'none';
+                adminDashboard.style.display = 'block';
+            } else {
+                alert('Invalid password!');
+            }
+        });
+        
+        // Close Admin Dashboard
+        closeAdminBtn.addEventListener('click', () => {
+            adminDashboard.style.display = 'none';
+            publicView.style.display = 'block';
+        });
+        
+        // Admin Tab Switching
+        adminTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                adminTabs.forEach(t => t.classList.remove('active'));
+                adminContents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Handle Admin Result Form Submission
+        adminResultForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const studentId = document.getElementById('adminStudentId').value;
+            const studentName = document.getElementById('adminStudentName').value;
+            const category = document.getElementById('adminCategory').value;
+            const house = document.getElementById('adminTeam').value;
+            const position = document.getElementById('adminPosition').value;
+            const grade = document.getElementById('adminGrade').value;
+            
+            // Calculate points based on position and grade
+            let points = 0;
+            if (position === '1st' && grade === 'A') points = 5;
+            else if (position === '2nd' && grade === 'B') points = 3;
+            else if (position === '3rd' && grade === 'C') points = 1;
+            
+            // Add to admin results table
+            addResultToTable(adminResultsTableBody, studentId, studentName, category, house, position, grade, points);
+            
+            // Update student points
+            updateStudentPoints(studentId, studentName, house, points);
+            
+            // Reset form
+            adminResultForm.reset();
+            
+            // Show success message
+            alert('Result uploaded successfully!');
+        });
+        
+        // Handle Team Points Form Submission
+        teamPointsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const codexPoints = document.getElementById('codexPoints').value;
+            const syntaxPoints = document.getElementById('syntaxPoints').value;
+            const vertexPoints = document.getElementById('vertexPoints').value;
+            const logixPoints = document.getElementById('logixPoints').value;
+            
+            // Update team points in public view
+            teamPoints.codex.textContent = codexPoints;
+            teamPoints.syntax.textContent = syntaxPoints;
+            teamPoints.vertex.textContent = vertexPoints;
+            teamPoints.logix.textContent = logixPoints;
+            
+            // Show success message
+            alert('Team points updated successfully!');
+        });
+        
+        // Handle Category Leaders Form Submission
+        categoryLeadersForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const subJuniorTeam = document.getElementById('subJuniorTeam').value;
+            const subJuniorPoints = document.getElementById('subJuniorPoints').value;
+            const juniorTeam = document.getElementById('juniorTeam').value;
+            const juniorPoints = document.getElementById('juniorPoints').value;
+            const seniorTeam = document.getElementById('seniorTeam').value;
+            const seniorPoints = document.getElementById('seniorPoints').value;
+            const superSeniorTeam = document.getElementById('superSeniorTeam').value;
+            const superSeniorPoints = document.getElementById('superSeniorPoints').value;
+            const generalTeam = document.getElementById('generalTeam').value;
+            const generalPoints = document.getElementById('generalPoints').value;
+            
+            // Update category leaders in public view
+            updateCategoryLeader('sub-junior', subJuniorTeam, subJuniorPoints);
+            updateCategoryLeader('junior', juniorTeam, juniorPoints);
+            updateCategoryLeader('senior', seniorTeam, seniorPoints);
+            updateCategoryLeader('super-senior', superSeniorTeam, superSeniorPoints);
+            updateCategoryLeader('general', generalTeam, generalPoints);
+            
+            // Show success message
+            alert('Category leaders updated successfully!');
+        });
+        
+        // Helper function to add result to table
+        function addResultToTable(tableBody, studentId, studentName, category, house, position, grade, points) {
+            const newRow = document.createElement('tr');
+            
+            newRow.innerHTML = `
+                <td>${studentId}</td>
+                <td>${studentName}</td>
+                <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>
+                <td>${house.charAt(0).toUpperCase() + house.slice(1)}</td>
+                <td>${position}</td>
+                <td>${grade}</td>
+                <td><button class="delete-btn">Delete</button></td>
+            `;
+            
+            tableBody.appendChild(newRow);
+            
+            // Add delete functionality for admin table
+            const deleteBtn = newRow.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                tableBody.removeChild(newRow);
+            });
+        }
+        
+        // Helper function to update category leader
+        function updateCategoryLeader(category, team, points) {
+            const leaderElement = categoryLeaders[category];
+            const teamColor = leaderElement.querySelector('.team-color');
+            const teamText = leaderElement.querySelector('div:last-child');
+            
+            // Update team color
+            teamColor.className = `team-color ${team}`;
+            
+            // Update team text
+            teamText.textContent = `${team.charAt(0).toUpperCase() + team.slice(1)} - ${points} points`;
+        }
+        
+        // Update student points
+        function updateStudentPoints(studentId, studentName, house, points) {
+            // Check if student already exists
+            let student = students.find(s => s.id === studentId);
+            
+            if (student) {
+                // Update existing student
+                student.points += points;
+            } else {
+                // Add new student
+                students.push({
+                    id: studentId,
+                    name: studentName,
+                    house: house,
+                    points: points
+                });
+            }
+            
+            // Update student display
+            displayStudents();
+        }
+        
+        // Display students
+        function displayStudents(filter = '') {
+            studentsList.innerHTML = '';
+            
+            // Sort students by points (descending)
+            const sortedStudents = [...students].sort((a, b) => b.points - a.points);
+            
+            // Filter students if needed
+            const filteredStudents = filter 
+                ? sortedStudents.filter(s => 
+                    s.name.toLowerCase().includes(filter.toLowerCase()) || 
+                    s.id.toLowerCase().includes(filter.toLowerCase()) ||
+                    s.house.toLowerCase().includes(filter.toLowerCase()))
+                : sortedStudents;
+            
+            // Display students
+            filteredStudents.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.innerHTML = `
+                    <div class="student-info">
+                        <h3>${student.name} <span class="student-house house-${student.house}">${student.house.toUpperCase()}</span></h3>
+                        <p>ID: ${student.id}</p>
+                    </div>
+                    <div class="student-points">${student.points} pts</div>
+                `;
+                studentsList.appendChild(studentCard);
+            });
+        }
+        
+        // Student search functionality
+        studentSearch.addEventListener('input', function() {
+            displayStudents(this.value);
+        });
+        
+        // Add some sample results
+        document.addEventListener('DOMContentLoaded', function() {
+            const sampleResults = [
+                ['2023001', 'Ahmed Hassan', 'junior', 'codex', '1st', 'A', 5],
+                ['2023002', 'Sara Ali', 'senior', 'syntax', '2nd', 'B', 3],
+                ['2023003', 'Mohammed Khan', 'general', 'vertex', '3rd', 'C', 1]
+            ];
+            
+            sampleResults.forEach(result => {
+                addResultToTable(adminResultsTableBody, ...result);
+            });
+            
+            // Display initial students
+            displayStudents();
+        });
+    </script>
+</body>
+</html>
