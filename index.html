@@ -511,6 +511,37 @@
             border-radius: 4px;
         }
         
+        .scoring-system {
+            grid-column: span 2;
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .scoring-system h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .scoring-system ul {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .scoring-system li {
+            padding: 5px 0;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .results-form, .edit-form {
                 grid-template-columns: 1fr;
@@ -540,6 +571,10 @@
             
             .admin-tabs {
                 flex-wrap: wrap;
+            }
+            
+            .scoring-system ul {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -732,6 +767,19 @@
             
             <div id="results-tab" class="admin-content active">
                 <h3>Upload Results</h3>
+                <div class="scoring-system">
+                    <h4>Scoring System</h4>
+                    <ul>
+                        <li><strong>Positions:</strong></li>
+                        <li>1st Place → 5 marks</li>
+                        <li>2nd Place → 3 marks</li>
+                        <li>3rd Place → 1 mark</li>
+                        <li><strong>Grades:</strong></li>
+                        <li>A Grade → 5 marks</li>
+                        <li>B Grade → 3 marks</li>
+                        <li>C Grade → 1 mark</li>
+                    </ul>
+                </div>
                 <form id="adminResultForm" class="results-form">
                     <div class="form-group">
                         <label for="adminStudentId">Student ID</label>
@@ -780,18 +828,28 @@
                     <div class="position-group">
                         <div class="form-group">
                             <label for="adminPosition">Position</label>
-                            <select id="adminPosition" required>
+                            <select id="adminPosition">
                                 <option value="">Select Position</option>
                                 <option value="1st">1st</option>
                                 <option value="2nd">2nd</option>
                                 <option value="3rd">3rd</option>
-                                <option value="participation">Participation</option>
                             </select>
+                            <div class="error-message" id="positionError">Please select either Position or Grade</div>
                         </div>
                         <div class="form-group">
-                            <label for="adminPoints">Points</label>
-                            <input type="number" id="adminPoints" min="0" max="50" required>
+                            <label for="adminGrade">Grade</label>
+                            <select id="adminGrade">
+                                <option value="">Select Grade</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                            <div class="error-message" id="gradeError">Please select either Position or Grade</div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPoints">Calculated Points</label>
+                        <input type="number" id="adminPoints" readonly>
                     </div>
                     <button type="submit">Upload Result</button>
                 </form>
@@ -805,7 +863,7 @@
                             <th>Program</th>
                             <th>Category</th>
                             <th>House</th>
-                            <th>Position</th>
+                            <th>Position/Grade</th>
                             <th>Points</th>
                             <th>Actions</th>
                         </tr>
@@ -936,6 +994,13 @@
         const teamPointsForm = document.getElementById('teamPointsForm');
         const categoryLeadersForm = document.getElementById('categoryLeadersForm');
         
+        // Position and Grade elements
+        const adminPosition = document.getElementById('adminPosition');
+        const adminGrade = document.getElementById('adminGrade');
+        const adminPoints = document.getElementById('adminPoints');
+        const positionError = document.getElementById('positionError');
+        const gradeError = document.getElementById('gradeError');
+        
         // Team points elements
         const teamPoints = {
             codex: document.querySelector('.team-card.codex .team-points'),
@@ -999,6 +1064,80 @@
             });
         });
         
+        // Calculate points based on position or grade
+        function calculatePoints() {
+            const position = adminPosition.value;
+            const grade = adminGrade.value;
+            
+            // Reset errors
+            positionError.style.display = 'none';
+            gradeError.style.display = 'none';
+            
+            // Check if both position and grade are selected
+            if (position && grade) {
+                positionError.style.display = 'block';
+                gradeError.style.display = 'block';
+                adminPoints.value = '';
+                return;
+            }
+            
+            // Calculate points based on position
+            if (position) {
+                switch(position) {
+                    case '1st':
+                        adminPoints.value = 5;
+                        break;
+                    case '2nd':
+                        adminPoints.value = 3;
+                        break;
+                    case '3rd':
+                        adminPoints.value = 1;
+                        break;
+                    default:
+                        adminPoints.value = '';
+                }
+            }
+            
+            // Calculate points based on grade
+            if (grade) {
+                switch(grade) {
+                    case 'A':
+                        adminPoints.value = 5;
+                        break;
+                    case 'B':
+                        adminPoints.value = 3;
+                        break;
+                    case 'C':
+                        adminPoints.value = 1;
+                        break;
+                    default:
+                        adminPoints.value = '';
+                }
+            }
+            
+            // If neither is selected, clear the points
+            if (!position && !grade) {
+                adminPoints.value = '';
+            }
+        }
+        
+        // Position and Grade change events
+        adminPosition.addEventListener('change', function() {
+            // If position is selected, clear grade
+            if (this.value) {
+                adminGrade.value = '';
+            }
+            calculatePoints();
+        });
+        
+        adminGrade.addEventListener('change', function() {
+            // If grade is selected, clear position
+            if (this.value) {
+                adminPosition.value = '';
+            }
+            calculatePoints();
+        });
+        
         // Handle Admin Result Form Submission
         adminResultForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1010,10 +1149,19 @@
             const category = document.getElementById('adminCategory').value;
             const house = document.getElementById('adminTeam').value;
             const position = document.getElementById('adminPosition').value;
+            const grade = document.getElementById('adminGrade').value;
             const points = parseInt(document.getElementById('adminPoints').value);
             
+            // Validate that either position or grade is selected
+            if (!position && !grade) {
+                positionError.style.display = 'block';
+                gradeError.style.display = 'block';
+                alert('Please select either a Position or a Grade');
+                return;
+            }
+            
             // Add to admin results table
-            addResultToTable(adminResultsTableBody, studentId, studentName, program, category, house, position, points);
+            addResultToTable(adminResultsTableBody, studentId, studentName, program, category, house, position, grade, points);
             
             // Update student points and team points
             updateStudentPoints(studentId, studentName, house, points);
@@ -1021,9 +1169,11 @@
             
             // Reset form
             adminResultForm.reset();
+            adminPoints.value = '';
             
             // Show success message with details
-            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nProgram: ${program}\nPosition: ${position}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
+            const resultType = position ? `Position: ${position}` : `Grade: ${grade}`;
+            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nProgram: ${program}\n${resultType}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
             alert(message);
         });
         
@@ -1081,8 +1231,11 @@
         });
         
         // Helper function to add result to table
-        function addResultToTable(tableBody, studentId, studentName, program, category, house, position, points) {
+        function addResultToTable(tableBody, studentId, studentName, program, category, house, position, grade, points) {
             const newRow = document.createElement('tr');
+            
+            // Determine what to display in the position/grade column
+            const resultType = position ? position : grade;
             
             newRow.innerHTML = `
                 <td>${studentId}</td>
@@ -1090,7 +1243,7 @@
                 <td>${program.charAt(0).toUpperCase() + program.slice(1)}</td>
                 <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>
                 <td>${house.charAt(0).toUpperCase() + house.slice(1)}</td>
-                <td>${position}</td>
+                <td>${resultType}</td>
                 <td>${points}</td>
                 <td><button class="delete-btn">Delete</button></td>
             `;
@@ -1205,35 +1358,12 @@
             displayStudents(this.value);
         });
         
-        // Auto-fill points based on position
-        document.getElementById('adminPosition').addEventListener('change', function() {
-            const position = this.value;
-            const pointsInput = document.getElementById('adminPoints');
-            
-            switch(position) {
-                case '1st':
-                    pointsInput.value = 10;
-                    break;
-                case '2nd':
-                    pointsInput.value = 7;
-                    break;
-                case '3rd':
-                    pointsInput.value = 5;
-                    break;
-                case 'participation':
-                    pointsInput.value = 2;
-                    break;
-                default:
-                    pointsInput.value = '';
-            }
-        });
-        
         // Add some sample results
         document.addEventListener('DOMContentLoaded', function() {
             const sampleResults = [
-                ['2023001', 'Ahmed Hassan', 'dance', 'junior', 'codex', '1st', 10],
-                ['2023002', 'Sara Ali', 'music', 'senior', 'syntax', '2nd', 7],
-                ['2023003', 'Mohammed Khan', 'art', 'general', 'vertex', '3rd', 5]
+                ['2023001', 'Ahmed Hassan', 'dance', 'junior', 'codex', '1st', '', 5],
+                ['2023002', 'Sara Ali', 'music', 'senior', 'syntax', '', 'A', 5],
+                ['2023003', 'Mohammed Khan', 'art', 'general', 'vertex', '2nd', '', 3]
             ];
             
             sampleResults.forEach(result => {
