@@ -299,6 +299,10 @@
             grid-column: span 2;
         }
         
+        .grade-group {
+            grid-column: span 1;
+        }
+        
         .form-group {
             margin-bottom: 15px;
         }
@@ -511,12 +515,120 @@
             border-radius: 4px;
         }
         
+        .scoring-system {
+            grid-column: span 2;
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .scoring-system h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .scoring-system ul {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .scoring-system li {
+            padding: 5px 0;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .password-box h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .password-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .password-buttons button {
+            flex: 1;
+            grid-column: span 1;
+        }
+        
+        .cancel-btn {
+            background: var(--gray);
+        }
+        
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+        
+        .manual-points {
+            grid-column: span 2;
+            margin-top: 10px;
+        }
+        
+        .points-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .points-input-group input {
+            flex: 1;
+        }
+        
+        .points-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
         @media (max-width: 768px) {
             .results-form, .edit-form {
                 grid-template-columns: 1fr;
             }
             
-            .position-group, .program-group {
+            .position-group, .program-group, .grade-group {
                 grid-column: span 1;
                 grid-template-columns: 1fr;
             }
@@ -540,6 +652,19 @@
             
             .admin-tabs {
                 flex-wrap: wrap;
+            }
+            
+            .scoring-system ul {
+                grid-template-columns: 1fr;
+            }
+            
+            .password-buttons {
+                flex-direction: column;
+            }
+            
+            .points-input-group {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
@@ -717,6 +842,21 @@
         </footer>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-box">
+            <h3>Admin Login</h3>
+            <input type="password" id="adminPassword" class="password-input" placeholder="Enter admin password">
+            <div class="password-buttons">
+                <button id="submitPassword" class="submit-btn">Login</button>
+                <button id="cancelPassword" class="cancel-btn">Cancel</button>
+            </div>
+            <div id="passwordError" style="color: red; margin-top: 10px; display: none;">
+                Invalid password. Please try again.
+            </div>
+        </div>
+    </div>
+
     <div id="adminDashboard" class="admin-dashboard">
         <div class="admin-panel">
             <div class="admin-header">
@@ -755,6 +895,16 @@
                             <option value="sports">Sports</option>
                             <option value="other">Other</option>
                         </select>
+                        <input type="text" id="customProgram" placeholder="Or enter custom program" style="display: none; margin-top: 10px;">
+                    </div>
+                    <div class="form-group grade-group">
+                        <label for="adminGrade">Grade</label>
+                        <select id="adminGrade" required>
+                            <option value="">Select Grade</option>
+                            <option value="A">Grade A</option>
+                            <option value="B">Grade B</option>
+                            <option value="C">Grade C</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="adminCategory">Category</label>
@@ -777,20 +927,24 @@
                             <option value="logix">Logix</option>
                         </select>
                     </div>
-                    <div class="position-group">
-                        <div class="form-group">
-                            <label for="adminPosition">Position</label>
-                            <select id="adminPosition" required>
-                                <option value="">Select Position</option>
-                                <option value="1st">1st</option>
-                                <option value="2nd">2nd</option>
-                                <option value="3rd">3rd</option>
-                                <option value="participation">Participation</option>
-                            </select>
+                    <div class="form-group">
+                        <label for="adminPosition">Position (Optional)</label>
+                        <select id="adminPosition">
+                            <option value="">Select Position</option>
+                            <option value="1st">1st</option>
+                            <option value="2nd">2nd</option>
+                            <option value="3rd">3rd</option>
+                            <option value="participation">Participation</option>
+                        </select>
+                    </div>
+                    <div class="form-group manual-points">
+                        <label for="adminPoints">Points</label>
+                        <div class="points-input-group">
+                            <input type="number" id="adminPoints" min="0" max="100" required>
+                            <span>points</span>
                         </div>
-                        <div class="form-group">
-                            <label for="adminPoints">Points</label>
-                            <input type="number" id="adminPoints" min="0" max="50" required>
+                        <div class="points-description">
+                            Enter points manually (0-100)
                         </div>
                     </div>
                     <button type="submit">Upload Result</button>
@@ -803,6 +957,7 @@
                             <th>Student ID</th>
                             <th>Name</th>
                             <th>Program</th>
+                            <th>Grade</th>
                             <th>Category</th>
                             <th>House</th>
                             <th>Position</th>
@@ -928,6 +1083,13 @@
         const studentSearch = document.getElementById('studentSearch');
         const studentsList = document.getElementById('studentsList');
         
+        // Password elements
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const submitPasswordBtn = document.getElementById('submitPassword');
+        const cancelPasswordBtn = document.getElementById('cancelPassword');
+        const passwordError = document.getElementById('passwordError');
+        
         // Results tables
         const adminResultsTableBody = document.getElementById('adminResultsTableBody');
         
@@ -935,6 +1097,17 @@
         const adminResultForm = document.getElementById('adminResultForm');
         const teamPointsForm = document.getElementById('teamPointsForm');
         const categoryLeadersForm = document.getElementById('categoryLeadersForm');
+        
+        // Program elements
+        const adminProgram = document.getElementById('adminProgram');
+        const customProgram = document.getElementById('customProgram');
+        
+        // Grade elements
+        const adminGrade = document.getElementById('adminGrade');
+        
+        // Position and Points elements
+        const adminPosition = document.getElementById('adminPosition');
+        const adminPoints = document.getElementById('adminPoints');
         
         // Team points elements
         const teamPoints = {
@@ -955,11 +1128,11 @@
         
         // Student data
         let students = [
-            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15 },
-            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12 },
-            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8 },
-            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10 },
-            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6 }
+            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15, grade: 'A' },
+            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12, grade: 'B' },
+            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8, grade: 'C' },
+            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10, grade: 'A' },
+            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6, grade: 'B' }
         ];
 
         // Team points data
@@ -970,15 +1143,37 @@
             logix: 2050
         };
         
-        // Open Admin Dashboard
+        // Admin password
+        const ADMIN_PASSWORD = "admin123";
+        
+        // Open Password Modal
         openAdminBtn.addEventListener('click', () => {
-            const password = prompt('Enter admin password:');
-            if (password === 'admin123') {
+            passwordModal.style.display = 'flex';
+            adminPasswordInput.focus();
+        });
+        
+        // Submit Password
+        submitPasswordBtn.addEventListener('click', () => {
+            const enteredPassword = adminPasswordInput.value;
+            
+            if (enteredPassword === ADMIN_PASSWORD) {
+                passwordModal.style.display = 'none';
                 publicView.style.display = 'none';
                 adminDashboard.style.display = 'block';
+                adminPasswordInput.value = '';
+                passwordError.style.display = 'none';
             } else {
-                alert('Invalid password!');
+                passwordError.style.display = 'block';
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
             }
+        });
+        
+        // Cancel Password
+        cancelPasswordBtn.addEventListener('click', () => {
+            passwordModal.style.display = 'none';
+            adminPasswordInput.value = '';
+            passwordError.style.display = 'none';
         });
         
         // Close Admin Dashboard
@@ -999,6 +1194,18 @@
             });
         });
         
+        // Custom program input handling
+        adminProgram.addEventListener('change', function() {
+            if (this.value === 'other') {
+                customProgram.style.display = 'block';
+                customProgram.required = true;
+            } else {
+                customProgram.style.display = 'none';
+                customProgram.required = false;
+                customProgram.value = '';
+            }
+        });
+        
         // Handle Admin Result Form Submission
         adminResultForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1006,24 +1213,32 @@
             // Get form values
             const studentId = document.getElementById('adminStudentId').value;
             const studentName = document.getElementById('adminStudentName').value;
-            const program = document.getElementById('adminProgram').value;
+            const program = adminProgram.value === 'other' ? customProgram.value : adminProgram.value;
+            const grade = document.getElementById('adminGrade').value;
             const category = document.getElementById('adminCategory').value;
             const house = document.getElementById('adminTeam').value;
             const position = document.getElementById('adminPosition').value;
             const points = parseInt(document.getElementById('adminPoints').value);
             
+            // Validate required fields
+            if (!studentId || !studentName || !program || !grade || !category || !house || !points) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
             // Add to admin results table
-            addResultToTable(adminResultsTableBody, studentId, studentName, program, category, house, position, points);
+            addResultToTable(adminResultsTableBody, studentId, studentName, program, grade, category, house, position, points);
             
             // Update student points and team points
-            updateStudentPoints(studentId, studentName, house, points);
+            updateStudentPoints(studentId, studentName, house, points, grade);
             updateTeamPoints(house, points);
             
             // Reset form
             adminResultForm.reset();
+            customProgram.style.display = 'none';
             
             // Show success message with details
-            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nProgram: ${program}\nPosition: ${position}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
+            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nGrade: ${grade}\nProgram: ${program}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
             alert(message);
         });
         
@@ -1081,16 +1296,17 @@
         });
         
         // Helper function to add result to table
-        function addResultToTable(tableBody, studentId, studentName, program, category, house, position, points) {
+        function addResultToTable(tableBody, studentId, studentName, program, grade, category, house, position, points) {
             const newRow = document.createElement('tr');
             
             newRow.innerHTML = `
                 <td>${studentId}</td>
                 <td>${studentName}</td>
-                <td>${program.charAt(0).toUpperCase() + program.slice(1)}</td>
+                <td>${program}</td>
+                <td>Grade ${grade}</td>
                 <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>
                 <td>${house.charAt(0).toUpperCase() + house.slice(1)}</td>
-                <td>${position}</td>
+                <td>${position || 'N/A'}</td>
                 <td>${points}</td>
                 <td><button class="delete-btn">Delete</button></td>
             `;
@@ -1123,20 +1339,24 @@
         }
         
         // Update student points
-        function updateStudentPoints(studentId, studentName, house, points) {
+        function updateStudentPoints(studentId, studentName, house, points, grade) {
             // Check if student already exists
             let student = students.find(s => s.id === studentId);
             
             if (student) {
                 // Update existing student
                 student.points += points;
+                if (grade) {
+                    student.grade = grade;
+                }
             } else {
                 // Add new student
                 students.push({
                     id: studentId,
                     name: studentName,
                     house: house,
-                    points: points
+                    points: points,
+                    grade: grade
                 });
             }
             
@@ -1182,7 +1402,8 @@
                 ? sortedStudents.filter(s => 
                     s.name.toLowerCase().includes(filter.toLowerCase()) || 
                     s.id.toLowerCase().includes(filter.toLowerCase()) ||
-                    s.house.toLowerCase().includes(filter.toLowerCase()))
+                    s.house.toLowerCase().includes(filter.toLowerCase()) ||
+                    s.grade.toLowerCase().includes(filter.toLowerCase()))
                 : sortedStudents;
             
             // Display students
@@ -1192,7 +1413,7 @@
                 studentCard.innerHTML = `
                     <div class="student-info">
                         <h3>${student.name} <span class="student-house house-${student.house}">${student.house.toUpperCase()}</span></h3>
-                        <p>ID: ${student.id}</p>
+                        <p>ID: ${student.id} | Grade: ${student.grade}</p>
                     </div>
                     <div class="student-points">${student.points} point${student.points !== 1 ? 's' : ''}</div>
                 `;
@@ -1205,35 +1426,12 @@
             displayStudents(this.value);
         });
         
-        // Auto-fill points based on position
-        document.getElementById('adminPosition').addEventListener('change', function() {
-            const position = this.value;
-            const pointsInput = document.getElementById('adminPoints');
-            
-            switch(position) {
-                case '1st':
-                    pointsInput.value = 10;
-                    break;
-                case '2nd':
-                    pointsInput.value = 7;
-                    break;
-                case '3rd':
-                    pointsInput.value = 5;
-                    break;
-                case 'participation':
-                    pointsInput.value = 2;
-                    break;
-                default:
-                    pointsInput.value = '';
-            }
-        });
-        
         // Add some sample results
         document.addEventListener('DOMContentLoaded', function() {
             const sampleResults = [
-                ['2023001', 'Ahmed Hassan', 'dance', 'junior', 'codex', '1st', 10],
-                ['2023002', 'Sara Ali', 'music', 'senior', 'syntax', '2nd', 7],
-                ['2023003', 'Mohammed Khan', 'art', 'general', 'vertex', '3rd', 5]
+                ['2023001', 'Ahmed Hassan', 'dance', 'A', 'junior', 'codex', '1st', 5],
+                ['2023002', 'Sara Ali', 'music', 'B', 'senior', 'syntax', '', 8],
+                ['2023003', 'Mohammed Khan', 'art', 'C', 'general', 'vertex', '2nd', 3]
             ];
             
             sampleResults.forEach(result => {
