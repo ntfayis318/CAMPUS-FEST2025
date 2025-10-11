@@ -299,6 +299,10 @@
             grid-column: span 2;
         }
         
+        .grade-group {
+            grid-column: span 1;
+        }
+        
         .form-group {
             margin-bottom: 15px;
         }
@@ -510,88 +514,115 @@
             margin: 10px 0;
             border-radius: 4px;
         }
-
-        /* Program Search Styles */
-        .program-search-container {
-            position: relative;
-        }
-
-        .program-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-        }
-
-        .program-suggestion {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .program-suggestion:hover {
-            background-color: #f8f9fa;
-        }
-
-        .program-suggestion:last-child {
-            border-bottom: none;
-        }
-
-        .program-code {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .program-name {
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .program-details {
-            margin-top: 5px;
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-
-        .selected-program {
-            background-color: #e8f4ff;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .program-detail-row {
-            display: flex;
-            margin-bottom: 5px;
-        }
-
-        .program-detail-label {
-            font-weight: 600;
-            width: 150px;
-            color: var(--primary);
-        }
-
-        .program-detail-value {
-            flex: 1;
-        }
-
-        /* Grade field styling */
-        .grade-group {
+        
+        .scoring-system {
             grid-column: span 2;
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .scoring-system h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .scoring-system ul {
+            list-style-type: none;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 10px;
         }
-
+        
+        .scoring-system li {
+            padding: 5px 0;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .password-box h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .password-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .password-buttons button {
+            flex: 1;
+            grid-column: span 1;
+        }
+        
+        .cancel-btn {
+            background: var(--gray);
+        }
+        
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+        
+        .manual-points {
+            grid-column: span 2;
+            margin-top: 10px;
+        }
+        
+        .points-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .points-input-group input {
+            flex: 1;
+        }
+        
+        .points-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
         @media (max-width: 768px) {
             .results-form, .edit-form {
                 grid-template-columns: 1fr;
@@ -621,6 +652,19 @@
             
             .admin-tabs {
                 flex-wrap: wrap;
+            }
+            
+            .scoring-system ul {
+                grid-template-columns: 1fr;
+            }
+            
+            .password-buttons {
+                flex-direction: column;
+            }
+            
+            .points-input-group {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
@@ -798,6 +842,21 @@
         </footer>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-box">
+            <h3>Admin Login</h3>
+            <input type="password" id="adminPassword" class="password-input" placeholder="Enter admin password">
+            <div class="password-buttons">
+                <button id="submitPassword" class="submit-btn">Login</button>
+                <button id="cancelPassword" class="cancel-btn">Cancel</button>
+            </div>
+            <div id="passwordError" style="color: red; margin-top: 10px; display: none;">
+                Invalid password. Please try again.
+            </div>
+        </div>
+    </div>
+
     <div id="adminDashboard" class="admin-dashboard">
         <div class="admin-panel">
             <div class="admin-header">
@@ -823,15 +882,29 @@
                         <input type="text" id="adminStudentName" required>
                     </div>
                     <div class="form-group program-group">
-                        <label for="adminProgramCode">Program Code</label>
-                        <div class="program-search-container">
-                            <input type="text" id="adminProgramCode" placeholder="Type program code (e.g., SBNS1, JNST5)" required>
-                            <div class="program-suggestions" id="programSuggestions"></div>
-                        </div>
-                        <div class="selected-program" id="selectedProgram" style="display: none;">
-                            <strong>Selected Program:</strong>
-                            <div id="selectedProgramText"></div>
-                        </div>
+                        <label for="adminProgram">Program</label>
+                        <select id="adminProgram" required>
+                            <option value="">Select Program</option>
+                            <option value="dance">Dance</option>
+                            <option value="music">Music</option>
+                            <option value="drama">Drama</option>
+                            <option value="art">Art Exhibition</option>
+                            <option value="poetry">Poetry</option>
+                            <option value="debate">Debate</option>
+                            <option value="quiz">Quiz</option>
+                            <option value="sports">Sports</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="text" id="customProgram" placeholder="Or enter custom program" style="display: none; margin-top: 10px;">
+                    </div>
+                    <div class="form-group grade-group">
+                        <label for="adminGrade">Grade</label>
+                        <select id="adminGrade" required>
+                            <option value="">Select Grade</option>
+                            <option value="A">Grade A</option>
+                            <option value="B">Grade B</option>
+                            <option value="C">Grade C</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="adminCategory">Category</label>
@@ -854,31 +927,25 @@
                             <option value="logix">Logix</option>
                         </select>
                     </div>
-                    <div class="position-group">
-                        <div class="form-group">
-                            <label for="adminPosition">Position</label>
-                            <select id="adminPosition" required>
-                                <option value="">Select Position</option>
-                                <option value="1st">1st</option>
-                                <option value="2nd">2nd</option>
-                                <option value="3rd">3rd</option>
-                                <option value="participation">Participation</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="adminGrade">Grade</label>
-                            <select id="adminGrade" required>
-                                <option value="">Select Grade</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="participation">Participation</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group">
+                        <label for="adminPosition">Position (Optional)</label>
+                        <select id="adminPosition">
+                            <option value="">Select Position</option>
+                            <option value="1st">1st</option>
+                            <option value="2nd">2nd</option>
+                            <option value="3rd">3rd</option>
+                            <option value="participation">Participation</option>
+                        </select>
+                    </div>
+                    <div class="form-group manual-points">
                         <label for="adminPoints">Points</label>
-                        <input type="number" id="adminPoints" min="0" max="50" readonly>
+                        <div class="points-input-group">
+                            <input type="number" id="adminPoints" min="0" max="100" required>
+                            <span>points</span>
+                        </div>
+                        <div class="points-description">
+                            Enter points manually (0-100)
+                        </div>
                     </div>
                     <button type="submit">Upload Result</button>
                 </form>
@@ -890,10 +957,10 @@
                             <th>Student ID</th>
                             <th>Name</th>
                             <th>Program</th>
+                            <th>Grade</th>
                             <th>Category</th>
                             <th>House</th>
                             <th>Position</th>
-                            <th>Grade</th>
                             <th>Points</th>
                             <th>Actions</th>
                         </tr>
@@ -1016,6 +1083,13 @@
         const studentSearch = document.getElementById('studentSearch');
         const studentsList = document.getElementById('studentsList');
         
+        // Password elements
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const submitPasswordBtn = document.getElementById('submitPassword');
+        const cancelPasswordBtn = document.getElementById('cancelPassword');
+        const passwordError = document.getElementById('passwordError');
+        
         // Results tables
         const adminResultsTableBody = document.getElementById('adminResultsTableBody');
         
@@ -1024,11 +1098,16 @@
         const teamPointsForm = document.getElementById('teamPointsForm');
         const categoryLeadersForm = document.getElementById('categoryLeadersForm');
         
-        // Program search elements
-        const adminProgramCode = document.getElementById('adminProgramCode');
-        const programSuggestions = document.getElementById('programSuggestions');
-        const selectedProgram = document.getElementById('selectedProgram');
-        const selectedProgramText = document.getElementById('selectedProgramText');
+        // Program elements
+        const adminProgram = document.getElementById('adminProgram');
+        const customProgram = document.getElementById('customProgram');
+        
+        // Grade elements
+        const adminGrade = document.getElementById('adminGrade');
+        
+        // Position and Points elements
+        const adminPosition = document.getElementById('adminPosition');
+        const adminPoints = document.getElementById('adminPoints');
         
         // Team points elements
         const teamPoints = {
@@ -1049,11 +1128,11 @@
         
         // Student data
         let students = [
-            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15 },
-            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12 },
-            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8 },
-            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10 },
-            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6 }
+            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15, grade: 'A' },
+            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12, grade: 'B' },
+            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8, grade: 'C' },
+            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10, grade: 'A' },
+            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6, grade: 'B' }
         ];
 
         // Team points data
@@ -1063,101 +1142,38 @@
             vertex: 2180,
             logix: 2050
         };
-
-        // Program data - comprehensive list of all programs
-        const programs = [
-            // Sub Junior Non-Stage
-            { code: "SBNS1", name: "APPRECIATION MLM", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS2", name: "CAPTION MAKING", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS3", name: "DIARY WRITING MLM", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS4", name: "DICTIONARY MAKING ARB", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS5", name: "ESSAY WRITING MLM", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS6", name: "HINDI VIDVAN", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS7", name: "JIGSAW PUZZLE", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS8", name: "LETTER WRITING ENG", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS9", name: "MATH TALENT", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Master" },
-            { code: "SBNS10", name: "MEMORY TEST", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS11", name: "MULTI LING HAND WRITING", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS12", name: "ORIGAMI", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS13", name: "PENCIL DRAWING", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS14", name: "POEM WRITING ENG", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS15", name: "POEM WRITING MLM", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS16", name: "POWERPOINT CREATION", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS17", name: "SHORT STORY MLM", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS18", name: "STORY COMPLETION ENG", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS19", name: "SUDOKU", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SBNS20", name: "TYPING MASTER ENG", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SBNS21", name: "VOCABULARY", category: "SUB JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Master" },
-
-            // Sub Junior Stage
-            { code: "SBST1", name: "ADHĀN", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST2", name: "CONVERSATION MLM", category: "SUB JUNIOR", type: "Group", stage: "Stage", participants: 4, categoryType: "GROUP" },
-            { code: "SBST3", name: "CONVERSATION URD", category: "SUB JUNIOR", type: "Group", stage: "Stage", participants: 4, categoryType: "GROUP" },
-            { code: "SBST4", name: "GEO GIANT", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-            { code: "SBST5", name: "GK QUIZ", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-            { code: "SBST6", name: "GROUP SONG", category: "SUB JUNIOR", type: "Group", stage: "Stage", participants: 3, categoryType: "GROUP" },
-            { code: "SBST7", name: "ḤIFẒ", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST8", name: "KADHAKADHANAM", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST9", name: "QIRĀʾAH", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST10", name: "READING ARB", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST11", name: "READING ENG", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST12", name: "READING URD", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST13", name: "SONG ARB", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST14", name: "SONG ENG", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST15", name: "SONG MLM", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST16", name: "SONG URD", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST17", name: "SPEECH & SONG MLM", category: "SUB JUNIOR", type: "Group", stage: "Stage", participants: 3, categoryType: "GROUP" },
-            { code: "SBST18", name: "SPEECH ARB", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST19", name: "SPEECH ENG", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST20", name: "SPEECH MLM", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST21", name: "SPEECH URD", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST22", name: "SPELLING BEE", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST23", name: "WAʿẒ", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SBST24", name: "WORD FIGHT ENG", category: "SUB JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-
-            // Junior Non-Stage (sample)
-            { code: "JNNS1", name: "ACRYLIC PAINTING", category: "JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "JNNS2", name: "DICTIONARY MAKING HINDI", category: "JUNIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "JNNS9", name: "MATH TALENT", category: "JUNIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Master" },
-
-            // Junior Stage (sample)
-            { code: "JNST1", name: "GEO GIANT", category: "JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-            { code: "JNST2", name: "GK QUIZ", category: "JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-            { code: "JNST20", name: "WORD FIGHT ENG", category: "JUNIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Master" },
-
-            // Senior Non-Stage (sample)
-            { code: "SNNS1", name: "CALLIGRAPHY", category: "SENIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Individual" },
-            { code: "SNNS9", name: "MAQĀMA ARB", category: "SENIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-
-            // Senior Stage (sample)
-            { code: "SNST1", name: "ʾALFIYYAH CONTEST", category: "SENIOR", type: "Single", stage: "Stage", participants: 2, categoryType: "Master" },
-            { code: "SNST25", name: "WAʿẒ", category: "SENIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-
-            // Super Senior Non-Stage (sample)
-            { code: "SPNS1", name: "ABSTRACT WRITING ENG", category: "SUPER SENIOR", type: "Single", stage: "Non-Stg", participants: 3, categoryType: "Individual" },
-            { code: "SPNS4", name: "AL ʿARABI", category: "SUPER SENIOR", type: "Single", stage: "Non-Stg", participants: 2, categoryType: "Master" },
-
-            // Super Senior Stage (sample)
-            { code: "SPST1", name: "ACADEMIC TALK ENG", category: "SUPER SENIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-            { code: "SPST25", name: "WAʿẒ", category: "SUPER SENIOR", type: "Single", stage: "Stage", participants: 3, categoryType: "Individual" },
-
-            // General (sample)
-            { code: "GNNS1", name: "COLLAGE", category: "GENERAL", type: "Group", stage: "Non-Stg", participants: null, categoryType: "GENERAL" },
-            { code: "GNST1", name: "CAMPUS TALENT", category: "GENERAL", type: "Group", stage: "Stage", participants: 1, categoryType: "STARRED" }
-        ];
-
-        // Current selected program
-        let currentSelectedProgram = null;
         
-        // Open Admin Dashboard
+        // Admin password
+        const ADMIN_PASSWORD = "admin123";
+        
+        // Open Password Modal
         openAdminBtn.addEventListener('click', () => {
-            const password = prompt('Enter admin password:');
-            if (password === 'admin123') {
+            passwordModal.style.display = 'flex';
+            adminPasswordInput.focus();
+        });
+        
+        // Submit Password
+        submitPasswordBtn.addEventListener('click', () => {
+            const enteredPassword = adminPasswordInput.value;
+            
+            if (enteredPassword === ADMIN_PASSWORD) {
+                passwordModal.style.display = 'none';
                 publicView.style.display = 'none';
                 adminDashboard.style.display = 'block';
+                adminPasswordInput.value = '';
+                passwordError.style.display = 'none';
             } else {
-                alert('Invalid password!');
+                passwordError.style.display = 'block';
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
             }
+        });
+        
+        // Cancel Password
+        cancelPasswordBtn.addEventListener('click', () => {
+            passwordModal.style.display = 'none';
+            adminPasswordInput.value = '';
+            passwordError.style.display = 'none';
         });
         
         // Close Admin Dashboard
@@ -1177,102 +1193,16 @@
                 document.getElementById(`${tabId}-tab`).classList.add('active');
             });
         });
-
-        // Program search functionality
-        adminProgramCode.addEventListener('input', function() {
-            const searchTerm = this.value.trim().toUpperCase();
-            programSuggestions.innerHTML = '';
-            
-            if (searchTerm.length < 1) {
-                programSuggestions.style.display = 'none';
-                selectedProgram.style.display = 'none';
-                currentSelectedProgram = null;
-                return;
-            }
-            
-            const filteredPrograms = programs.filter(program => 
-                program.code.includes(searchTerm) || 
-                program.name.toUpperCase().includes(searchTerm)
-            );
-            
-            if (filteredPrograms.length > 0) {
-                filteredPrograms.forEach(program => {
-                    const suggestion = document.createElement('div');
-                    suggestion.className = 'program-suggestion';
-                    suggestion.innerHTML = `
-                        <div class="program-code">${program.code}</div>
-                        <div class="program-name">${program.name}</div>
-                        <div class="program-details">${program.category} | ${program.type} | ${program.stage} | ${program.categoryType}</div>
-                    `;
-                    suggestion.addEventListener('click', () => {
-                        selectProgram(program);
-                    });
-                    programSuggestions.appendChild(suggestion);
-                });
-                programSuggestions.style.display = 'block';
+        
+        // Custom program input handling
+        adminProgram.addEventListener('change', function() {
+            if (this.value === 'other') {
+                customProgram.style.display = 'block';
+                customProgram.required = true;
             } else {
-                programSuggestions.style.display = 'none';
-            }
-        });
-
-        // Select program function
-        function selectProgram(program) {
-            adminProgramCode.value = program.code;
-            
-            // Display detailed program information
-            selectedProgramText.innerHTML = `
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Program Code:</div>
-                    <div class="program-detail-value">${program.code}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Program Name:</div>
-                    <div class="program-detail-value">${program.name}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Category:</div>
-                    <div class="program-detail-value">${program.category}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Type:</div>
-                    <div class="program-detail-value">${program.type}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Stage:</div>
-                    <div class="program-detail-value">${program.stage}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Participants:</div>
-                    <div class="program-detail-value">${program.participants || 'N/A'}</div>
-                </div>
-                <div class="program-detail-row">
-                    <div class="program-detail-label">Category Type:</div>
-                    <div class="program-detail-value">${program.categoryType}</div>
-                </div>
-            `;
-            
-            selectedProgram.style.display = 'block';
-            programSuggestions.style.display = 'none';
-            currentSelectedProgram = program;
-            
-            // Auto-fill category based on program
-            const categoryMap = {
-                'SUB JUNIOR': 'sub-junior',
-                'JUNIOR': 'junior',
-                'SENIOR': 'senior',
-                'SUPER SENIOR': 'super-senior',
-                'GENERAL': 'general'
-            };
-            
-            if (categoryMap[program.category]) {
-                document.getElementById('adminCategory').value = categoryMap[program.category];
-            }
-        }
-
-        // Close suggestions when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.program-search-container')) {
-                programSuggestions.style.display = 'none';
+                customProgram.style.display = 'none';
+                customProgram.required = false;
+                customProgram.value = '';
             }
         });
         
@@ -1283,32 +1213,32 @@
             // Get form values
             const studentId = document.getElementById('adminStudentId').value;
             const studentName = document.getElementById('adminStudentName').value;
-            const programCode = document.getElementById('adminProgramCode').value;
+            const program = adminProgram.value === 'other' ? customProgram.value : adminProgram.value;
+            const grade = document.getElementById('adminGrade').value;
             const category = document.getElementById('adminCategory').value;
             const house = document.getElementById('adminTeam').value;
             const position = document.getElementById('adminPosition').value;
-            const grade = document.getElementById('adminGrade').value;
             const points = parseInt(document.getElementById('adminPoints').value);
             
-            // Get program name
-            const programName = currentSelectedProgram ? 
-                `${currentSelectedProgram.code} - ${currentSelectedProgram.name}` : 
-                programCode;
+            // Validate required fields
+            if (!studentId || !studentName || !program || !grade || !category || !house || !points) {
+                alert('Please fill all required fields');
+                return;
+            }
             
             // Add to admin results table
-            addResultToTable(adminResultsTableBody, studentId, studentName, programName, category, house, position, grade, points);
+            addResultToTable(adminResultsTableBody, studentId, studentName, program, grade, category, house, position, points);
             
             // Update student points and team points
-            updateStudentPoints(studentId, studentName, house, points);
+            updateStudentPoints(studentId, studentName, house, points, grade);
             updateTeamPoints(house, points);
             
             // Reset form
             adminResultForm.reset();
-            selectedProgram.style.display = 'none';
-            currentSelectedProgram = null;
+            customProgram.style.display = 'none';
             
             // Show success message with details
-            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nProgram: ${programName}\nPosition: ${position}\nGrade: ${grade}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
+            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nGrade: ${grade}\nProgram: ${program}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
             alert(message);
         });
         
@@ -1366,17 +1296,17 @@
         });
         
         // Helper function to add result to table
-        function addResultToTable(tableBody, studentId, studentName, program, category, house, position, grade, points) {
+        function addResultToTable(tableBody, studentId, studentName, program, grade, category, house, position, points) {
             const newRow = document.createElement('tr');
             
             newRow.innerHTML = `
                 <td>${studentId}</td>
                 <td>${studentName}</td>
-                <td title="${program}">${program.length > 30 ? program.substring(0, 30) + '...' : program}</td>
+                <td>${program}</td>
+                <td>Grade ${grade}</td>
                 <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>
                 <td>${house.charAt(0).toUpperCase() + house.slice(1)}</td>
-                <td>${position}</td>
-                <td>${grade}</td>
+                <td>${position || 'N/A'}</td>
                 <td>${points}</td>
                 <td><button class="delete-btn">Delete</button></td>
             `;
@@ -1409,20 +1339,24 @@
         }
         
         // Update student points
-        function updateStudentPoints(studentId, studentName, house, points) {
+        function updateStudentPoints(studentId, studentName, house, points, grade) {
             // Check if student already exists
             let student = students.find(s => s.id === studentId);
             
             if (student) {
                 // Update existing student
                 student.points += points;
+                if (grade) {
+                    student.grade = grade;
+                }
             } else {
                 // Add new student
                 students.push({
                     id: studentId,
                     name: studentName,
                     house: house,
-                    points: points
+                    points: points,
+                    grade: grade
                 });
             }
             
@@ -1468,7 +1402,8 @@
                 ? sortedStudents.filter(s => 
                     s.name.toLowerCase().includes(filter.toLowerCase()) || 
                     s.id.toLowerCase().includes(filter.toLowerCase()) ||
-                    s.house.toLowerCase().includes(filter.toLowerCase()))
+                    s.house.toLowerCase().includes(filter.toLowerCase()) ||
+                    s.grade.toLowerCase().includes(filter.toLowerCase()))
                 : sortedStudents;
             
             // Display students
@@ -1478,7 +1413,7 @@
                 studentCard.innerHTML = `
                     <div class="student-info">
                         <h3>${student.name} <span class="student-house house-${student.house}">${student.house.toUpperCase()}</span></h3>
-                        <p>ID: ${student.id}</p>
+                        <p>ID: ${student.id} | Grade: ${student.grade}</p>
                     </div>
                     <div class="student-points">${student.points} point${student.points !== 1 ? 's' : ''}</div>
                 `;
@@ -1491,38 +1426,12 @@
             displayStudents(this.value);
         });
         
-        // Auto-fill points based on position or grade
-        function updatePoints() {
-            const position = document.getElementById('adminPosition').value;
-            const grade = document.getElementById('adminGrade').value;
-            const pointsInput = document.getElementById('adminPoints');
-            
-            let points = 0;
-            
-            // New points system: 1st/A = 5, 2nd/B = 3, 3rd/C = 1
-            if (position === '1st' || grade === 'A') {
-                points = 5;
-            } else if (position === '2nd' || grade === 'B') {
-                points = 3;
-            } else if (position === '3rd' || grade === 'C') {
-                points = 1;
-            } else if (position === 'participation' || grade === 'participation') {
-                points = 0;
-            }
-            
-            pointsInput.value = points;
-        }
-        
-        // Add event listeners to position and grade fields
-        document.getElementById('adminPosition').addEventListener('change', updatePoints);
-        document.getElementById('adminGrade').addEventListener('change', updatePoints);
-        
         // Add some sample results
         document.addEventListener('DOMContentLoaded', function() {
             const sampleResults = [
-                ['2023001', 'Ahmed Hassan', 'SBNS1 - APPRECIATION MLM', 'junior', 'codex', '1st', 'A', 5],
-                ['2023002', 'Sara Ali', 'SBST14 - SONG ENG', 'senior', 'syntax', '2nd', 'B', 3],
-                ['2023003', 'Mohammed Khan', 'JNNS1 - ACRYLIC PAINTING', 'general', 'vertex', '3rd', 'C', 1]
+                ['2023001', 'Ahmed Hassan', 'dance', 'A', 'junior', 'codex', '1st', 5],
+                ['2023002', 'Sara Ali', 'music', 'B', 'senior', 'syntax', '', 8],
+                ['2023003', 'Mohammed Khan', 'art', 'C', 'general', 'vertex', '2nd', 3]
             ];
             
             sampleResults.forEach(result => {
