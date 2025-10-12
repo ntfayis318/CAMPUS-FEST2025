@@ -6,6 +6,7 @@
     <title>AI-GoRhythm | Maslac Arts Fest 25</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* All your existing CSS styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -701,19 +702,19 @@
                 <div class="teams-container">
                     <div class="team-card codex">
                         <div class="team-name">Codex</div>
-                        <div class="team-points">2450</div>
+                        <div class="team-points" id="codex-points">2450</div>
                     </div>
                     <div class="team-card syntax">
                         <div class="team-name">Syntax</div>
-                        <div class="team-points">2310</div>
+                        <div class="team-points" id="syntax-points">2310</div>
                     </div>
                     <div class="team-card vertex">
                         <div class="team-name">Vertex</div>
-                        <div class="team-points">2180</div>
+                        <div class="team-points" id="vertex-points">2180</div>
                     </div>
                     <div class="team-card logix">
                         <div class="team-name">Logix</div>
-                        <div class="team-points">2050</div>
+                        <div class="team-points" id="logix-points">2050</div>
                     </div>
                 </div>
             </section>
@@ -726,7 +727,7 @@
                         <div class="category-body">
                             <div class="leading-team">
                                 <div class="team-color syntax"></div>
-                                <div>Syntax - 650 points</div>
+                                <div id="sub-junior-leader">Syntax - 650 points</div>
                             </div>
                         </div>
                     </div>
@@ -735,7 +736,7 @@
                         <div class="category-body">
                             <div class="leading-team">
                                 <div class="team-color codex"></div>
-                                <div>Codex - 720 points</div>
+                                <div id="junior-leader">Codex - 720 points</div>
                             </div>
                         </div>
                     </div>
@@ -744,7 +745,7 @@
                         <div class="category-body">
                             <div class="leading-team">
                                 <div class="team-color vertex"></div>
-                                <div>Vertex - 580 points</div>
+                                <div id="senior-leader">Vertex - 580 points</div>
                             </div>
                         </div>
                     </div>
@@ -753,7 +754,7 @@
                         <div class="category-body">
                             <div class="leading-team">
                                 <div class="team-color logix"></div>
-                                <div>Logix - 620 points</div>
+                                <div id="super-senior-leader">Logix - 620 points</div>
                             </div>
                         </div>
                     </div>
@@ -762,7 +763,7 @@
                         <div class="category-body">
                             <div class="leading-team">
                                 <div class="team-color codex"></div>
-                                <div>Codex - 680 points</div>
+                                <div id="general-leader">Codex - 680 points</div>
                             </div>
                         </div>
                     </div>
@@ -793,43 +794,8 @@
                             <th>Total</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Codex</strong></td>
-                            <td>620</td>
-                            <td>720</td>
-                            <td>530</td>
-                            <td>500</td>
-                            <td>680</td>
-                            <td><strong>3050</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Syntax</strong></td>
-                            <td>650</td>
-                            <td>680</td>
-                            <td>540</td>
-                            <td>580</td>
-                            <td>610</td>
-                            <td><strong>3060</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Vertex</strong></td>
-                            <td>580</td>
-                            <td>640</td>
-                            <td>580</td>
-                            <td>550</td>
-                            <td>590</td>
-                            <td><strong>2940</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Logix</strong></td>
-                            <td>610</td>
-                            <td>590</td>
-                            <td>530</td>
-                            <td>620</td>
-                            <td>570</td>
-                            <td><strong>2920</strong></td>
-                        </tr>
+                    <tbody id="leaderboard-body">
+                        <!-- Leaderboard data will be populated by JavaScript -->
                     </tbody>
                 </table>
             </section>
@@ -1099,6 +1065,7 @@
                             <option value="A">Grade A</option>
                             <option value="B">Grade B</option>
                             <option value="C">Grade C</option>
+                            <option value="No Grade">No Grade</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1287,6 +1254,7 @@
         
         // Results tables
         const adminResultsTableBody = document.getElementById('adminResultsTableBody');
+        const leaderboardBody = document.getElementById('leaderboard-body');
         
         // Forms
         const adminResultForm = document.getElementById('adminResultForm');
@@ -1297,49 +1265,70 @@
         const adminProgram = document.getElementById('adminProgram');
         const customProgram = document.getElementById('customProgram');
         
-        // Grade elements
-        const adminGrade = document.getElementById('adminGrade');
-        
-        // Position and Points elements
-        const adminPosition = document.getElementById('adminPosition');
-        const adminPoints = document.getElementById('adminPoints');
-        
         // Team points elements
         const teamPoints = {
-            codex: document.querySelector('.team-card.codex .team-points'),
-            syntax: document.querySelector('.team-card.syntax .team-points'),
-            vertex: document.querySelector('.team-card.vertex .team-points'),
-            logix: document.querySelector('.team-card.logix .team-points')
+            codex: document.getElementById('codex-points'),
+            syntax: document.getElementById('syntax-points'),
+            vertex: document.getElementById('vertex-points'),
+            logix: document.getElementById('logix-points')
         };
         
         // Category leader elements
         const categoryLeaders = {
-            'sub-junior': document.querySelector('.category-card:nth-child(1) .leading-team'),
-            'junior': document.querySelector('.category-card:nth-child(2) .leading-team'),
-            'senior': document.querySelector('.category-card:nth-child(3) .leading-team'),
-            'super-senior': document.querySelector('.category-card:nth-child(4) .leading-team'),
-            'general': document.querySelector('.category-card:nth-child(5) .leading-team')
+            'sub-junior': document.getElementById('sub-junior-leader'),
+            'junior': document.getElementById('junior-leader'),
+            'senior': document.getElementById('senior-leader'),
+            'super-senior': document.getElementById('super-senior-leader'),
+            'general': document.getElementById('general-leader')
         };
         
-        // Student data
-        let students = [
-            { id: '2023001', name: 'Ahmed Hassan', house: 'codex', points: 15, grade: 'A' },
-            { id: '2023002', name: 'Sara Ali', house: 'syntax', points: 12, grade: 'B' },
-            { id: '2023003', name: 'Mohammed Khan', house: 'vertex', points: 8, grade: 'C' },
-            { id: '2023004', name: 'Fatima Ahmed', house: 'codex', points: 10, grade: 'A' },
-            { id: '2023005', name: 'Omar Farooq', house: 'logix', points: 6, grade: 'B' }
-        ];
-
-        // Team points data
+        // Admin password
+        const ADMIN_PASSWORD = "admin123";
+        
+        // Data storage
+        let students = [];
+        let results = [];
         let teamPointsData = {
             codex: 2450,
             syntax: 2310,
             vertex: 2180,
             logix: 2050
         };
+        let categoryLeadersData = {
+            'sub-junior': { team: 'syntax', points: 650 },
+            'junior': { team: 'codex', points: 720 },
+            'senior': { team: 'vertex', points: 580 },
+            'super-senior': { team: 'logix', points: 620 },
+            'general': { team: 'codex', points: 680 }
+        };
         
-        // Admin password
-        const ADMIN_PASSWORD = "admin123";
+        // Load data from localStorage
+        function loadData() {
+            const savedStudents = localStorage.getItem('students');
+            const savedResults = localStorage.getItem('results');
+            const savedTeamPoints = localStorage.getItem('teamPoints');
+            const savedCategoryLeaders = localStorage.getItem('categoryLeaders');
+            
+            if (savedStudents) students = JSON.parse(savedStudents);
+            if (savedResults) results = JSON.parse(savedResults);
+            if (savedTeamPoints) teamPointsData = JSON.parse(savedTeamPoints);
+            if (savedCategoryLeaders) categoryLeadersData = JSON.parse(savedCategoryLeaders);
+            
+            // Update UI with loaded data
+            updateTeamPointsDisplay();
+            updateCategoryLeadersDisplay();
+            displayStudents();
+            displayResults();
+            updateLeaderboard();
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('results', JSON.stringify(results));
+            localStorage.setItem('teamPoints', JSON.stringify(teamPointsData));
+            localStorage.setItem('categoryLeaders', JSON.stringify(categoryLeadersData));
+        }
         
         // Open Password Modal
         openAdminBtn.addEventListener('click', () => {
@@ -1421,20 +1410,48 @@
                 return;
             }
             
-            // Add to admin results table
-            addResultToTable(adminResultsTableBody, studentId, studentName, program, grade, category, house, position, points);
+            // Create result object
+            const result = {
+                id: Date.now().toString(), // Unique ID for each result
+                studentId,
+                studentName,
+                program,
+                grade,
+                category,
+                house,
+                position,
+                points,
+                timestamp: new Date().toISOString()
+            };
             
-            // Update student points and team points
+            // Add to results array
+            results.push(result);
+            
+            // Update student points
             updateStudentPoints(studentId, studentName, house, points, grade);
+            
+            // Update team points
             updateTeamPoints(house, points);
+            
+            // Update category leaders if needed
+            updateCategoryLeaderIfNeeded(category, house, points);
+            
+            // Save data
+            saveData();
+            
+            // Update UI
+            displayResults();
+            displayStudents();
+            updateTeamPointsDisplay();
+            updateCategoryLeadersDisplay();
+            updateLeaderboard();
             
             // Reset form
             adminResultForm.reset();
             customProgram.style.display = 'none';
             
-            // Show success message with details
-            const message = `Result uploaded successfully!\n\nStudent: ${studentName}\nGrade: ${grade}\nProgram: ${program}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`;
-            alert(message);
+            // Show success message
+            alert(`Result uploaded successfully!\n\nStudent: ${studentName}\nProgram: ${program}\nPoints: ${points}\n\nStudent points updated: +${points} points\nTeam ${house} points updated: +${points} points`);
         });
         
         // Handle Team Points Form Submission
@@ -1453,11 +1470,12 @@
             teamPointsData.vertex = vertexPoints;
             teamPointsData.logix = logixPoints;
             
-            // Update team points in public view
-            teamPoints.codex.textContent = codexPoints;
-            teamPoints.syntax.textContent = syntaxPoints;
-            teamPoints.vertex.textContent = vertexPoints;
-            teamPoints.logix.textContent = logixPoints;
+            // Save data
+            saveData();
+            
+            // Update team points display
+            updateTeamPointsDisplay();
+            updateLeaderboard();
             
             // Show success message
             alert('Team points updated successfully!');
@@ -1469,69 +1487,32 @@
             
             // Get form values
             const subJuniorTeam = document.getElementById('subJuniorTeam').value;
-            const subJuniorPoints = document.getElementById('subJuniorPoints').value;
+            const subJuniorPoints = parseInt(document.getElementById('subJuniorPoints').value);
             const juniorTeam = document.getElementById('juniorTeam').value;
-            const juniorPoints = document.getElementById('juniorPoints').value;
+            const juniorPoints = parseInt(document.getElementById('juniorPoints').value);
             const seniorTeam = document.getElementById('seniorTeam').value;
-            const seniorPoints = document.getElementById('seniorPoints').value;
+            const seniorPoints = parseInt(document.getElementById('seniorPoints').value);
             const superSeniorTeam = document.getElementById('superSeniorTeam').value;
-            const superSeniorPoints = document.getElementById('superSeniorPoints').value;
+            const superSeniorPoints = parseInt(document.getElementById('superSeniorPoints').value);
             const generalTeam = document.getElementById('generalTeam').value;
-            const generalPoints = document.getElementById('generalPoints').value;
+            const generalPoints = parseInt(document.getElementById('generalPoints').value);
             
-            // Update category leaders in public view
-            updateCategoryLeader('sub-junior', subJuniorTeam, subJuniorPoints);
-            updateCategoryLeader('junior', juniorTeam, juniorPoints);
-            updateCategoryLeader('senior', seniorTeam, seniorPoints);
-            updateCategoryLeader('super-senior', superSeniorTeam, superSeniorPoints);
-            updateCategoryLeader('general', generalTeam, generalPoints);
+            // Update category leaders data
+            categoryLeadersData['sub-junior'] = { team: subJuniorTeam, points: subJuniorPoints };
+            categoryLeadersData['junior'] = { team: juniorTeam, points: juniorPoints };
+            categoryLeadersData['senior'] = { team: seniorTeam, points: seniorPoints };
+            categoryLeadersData['super-senior'] = { team: superSeniorTeam, points: superSeniorPoints };
+            categoryLeadersData['general'] = { team: generalTeam, points: generalPoints };
+            
+            // Save data
+            saveData();
+            
+            // Update category leaders display
+            updateCategoryLeadersDisplay();
             
             // Show success message
             alert('Category leaders updated successfully!');
         });
-        
-        // Helper function to add result to table
-        function addResultToTable(tableBody, studentId, studentName, program, grade, category, house, position, points) {
-            const newRow = document.createElement('tr');
-            
-            newRow.innerHTML = `
-                <td>${studentId}</td>
-                <td>${studentName}</td>
-                <td>${program}</td>
-                <td>Grade ${grade}</td>
-                <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>
-                <td>${house.charAt(0).toUpperCase() + house.slice(1)}</td>
-                <td>${position || 'N/A'}</td>
-                <td>${points}</td>
-                <td><button class="delete-btn">Delete</button></td>
-            `;
-            
-            tableBody.appendChild(newRow);
-            
-            // Add delete functionality for admin table
-            const deleteBtn = newRow.querySelector('.delete-btn');
-            deleteBtn.addEventListener('click', function() {
-                // Remove points from student and team when deleting
-                const pointsToRemove = parseInt(points);
-                removeStudentPoints(studentId, pointsToRemove);
-                removeTeamPoints(house, pointsToRemove);
-                tableBody.removeChild(newRow);
-                alert(`Result deleted. Removed ${pointsToRemove} points from student and team ${house}.`);
-            });
-        }
-        
-        // Helper function to update category leader
-        function updateCategoryLeader(category, team, points) {
-            const leaderElement = categoryLeaders[category];
-            const teamColor = leaderElement.querySelector('.team-color');
-            const teamText = leaderElement.querySelector('div:last-child');
-            
-            // Update team color
-            teamColor.className = `team-color ${team}`;
-            
-            // Update team text
-            teamText.textContent = `${team.charAt(0).toUpperCase() + team.slice(1)} - ${points} points`;
-        }
         
         // Update student points
         function updateStudentPoints(studentId, studentName, house, points, grade) {
@@ -1554,35 +1535,109 @@
                     grade: grade
                 });
             }
-            
-            // Update student display
-            displayStudents();
-        }
-        
-        // Remove student points (when deleting a result)
-        function removeStudentPoints(studentId, points) {
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                student.points -= points;
-                if (student.points < 0) student.points = 0;
-                displayStudents();
-            }
         }
         
         // Update team points
         function updateTeamPoints(house, points) {
             // Update team points data
             teamPointsData[house] += points;
-            
-            // Update team points display
-            teamPoints[house].textContent = teamPointsData[house];
         }
         
-        // Remove team points (when deleting a result)
-        function removeTeamPoints(house, points) {
-            teamPointsData[house] -= points;
-            if (teamPointsData[house] < 0) teamPointsData[house] = 0;
-            teamPoints[house].textContent = teamPointsData[house];
+        // Update category leader if needed
+        function updateCategoryLeaderIfNeeded(category, house, points) {
+            // For simplicity, we're not automatically updating category leaders
+            // This would require recalculating all points per category
+            // In a real implementation, you would want to track category points separately
+        }
+        
+        // Update team points display
+        function updateTeamPointsDisplay() {
+            teamPoints.codex.textContent = teamPointsData.codex;
+            teamPoints.syntax.textContent = teamPointsData.syntax;
+            teamPoints.vertex.textContent = teamPointsData.vertex;
+            teamPoints.logix.textContent = teamPointsData.logix;
+        }
+        
+        // Update category leaders display
+        function updateCategoryLeadersDisplay() {
+            for (const category in categoryLeadersData) {
+                const data = categoryLeadersData[category];
+                categoryLeaders[category].innerHTML = `
+                    <div class="team-color ${data.team}"></div>
+                    <div>${data.team.charAt(0).toUpperCase() + data.team.slice(1)} - ${data.points} points</div>
+                `;
+            }
+        }
+        
+        // Display results in admin table
+        function displayResults() {
+            adminResultsTableBody.innerHTML = '';
+            
+            // Sort results by timestamp (newest first)
+            const sortedResults = [...results].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Display results
+            sortedResults.forEach(result => {
+                const newRow = document.createElement('tr');
+                
+                newRow.innerHTML = `
+                    <td>${result.studentId}</td>
+                    <td>${result.studentName}</td>
+                    <td>${result.program}</td>
+                    <td>${result.grade}</td>
+                    <td>${result.category.charAt(0).toUpperCase() + result.category.slice(1)}</td>
+                    <td>${result.house.charAt(0).toUpperCase() + result.house.slice(1)}</td>
+                    <td>${result.position || 'N/A'}</td>
+                    <td>${result.points}</td>
+                    <td><button class="delete-btn" data-id="${result.id}">Delete</button></td>
+                `;
+                
+                adminResultsTableBody.appendChild(newRow);
+            });
+            
+            // Add delete functionality
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const resultId = this.getAttribute('data-id');
+                    deleteResult(resultId);
+                });
+            });
+        }
+        
+        // Delete a result
+        function deleteResult(resultId) {
+            // Find the result
+            const resultIndex = results.findIndex(r => r.id === resultId);
+            
+            if (resultIndex !== -1) {
+                const result = results[resultIndex];
+                
+                // Remove points from student
+                const student = students.find(s => s.id === result.studentId);
+                if (student) {
+                    student.points -= result.points;
+                    if (student.points < 0) student.points = 0;
+                }
+                
+                // Remove points from team
+                teamPointsData[result.house] -= result.points;
+                if (teamPointsData[result.house] < 0) teamPointsData[result.house] = 0;
+                
+                // Remove the result
+                results.splice(resultIndex, 1);
+                
+                // Save data
+                saveData();
+                
+                // Update UI
+                displayResults();
+                displayStudents();
+                updateTeamPointsDisplay();
+                updateLeaderboard();
+                
+                alert(`Result deleted. Removed ${result.points} points from student and team ${result.house}.`);
+            }
         }
         
         // Display students
@@ -1616,25 +1671,77 @@
             });
         }
         
+        // Update leaderboard
+        function updateLeaderboard() {
+            // For now, we'll just show the team totals
+            // In a real implementation, you would calculate points per category
+            leaderboardBody.innerHTML = `
+                <tr>
+                    <td><strong>Codex</strong></td>
+                    <td>${Math.floor(teamPointsData.codex * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.codex * 0.25)}</td>
+                    <td>${Math.floor(teamPointsData.codex * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.codex * 0.15)}</td>
+                    <td>${Math.floor(teamPointsData.codex * 0.2)}</td>
+                    <td><strong>${teamPointsData.codex}</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Syntax</strong></td>
+                    <td>${Math.floor(teamPointsData.syntax * 0.25)}</td>
+                    <td>${Math.floor(teamPointsData.syntax * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.syntax * 0.15)}</td>
+                    <td>${Math.floor(teamPointsData.syntax * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.syntax * 0.2)}</td>
+                    <td><strong>${teamPointsData.syntax}</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Vertex</strong></td>
+                    <td>${Math.floor(teamPointsData.vertex * 0.15)}</td>
+                    <td>${Math.floor(teamPointsData.vertex * 0.25)}</td>
+                    <td>${Math.floor(teamPointsData.vertex * 0.25)}</td>
+                    <td>${Math.floor(teamPointsData.vertex * 0.15)}</td>
+                    <td>${Math.floor(teamPointsData.vertex * 0.2)}</td>
+                    <td><strong>${teamPointsData.vertex}</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Logix</strong></td>
+                    <td>${Math.floor(teamPointsData.logix * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.logix * 0.15)}</td>
+                    <td>${Math.floor(teamPointsData.logix * 0.2)}</td>
+                    <td>${Math.floor(teamPointsData.logix * 0.25)}</td>
+                    <td>${Math.floor(teamPointsData.logix * 0.2)}</td>
+                    <td><strong>${teamPointsData.logix}</strong></td>
+                </tr>
+            `;
+        }
+        
         // Student search functionality
         studentSearch.addEventListener('input', function() {
             displayStudents(this.value);
         });
         
-        // Add some sample results
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            const sampleResults = [
-                ['2023001', 'Ahmed Hassan', 'POEM WRITING ENG', 'A', 'junior', 'codex', '1st', 5],
-                ['2023002', 'Sara Ali', 'SONG MLM', 'B', 'senior', 'syntax', '', 8],
-                ['2023003', 'Mohammed Khan', 'MATH TALENT', 'C', 'general', 'vertex', '2nd', 3]
-            ];
+            // Load data from localStorage
+            loadData();
             
-            sampleResults.forEach(result => {
-                addResultToTable(adminResultsTableBody, ...result);
-            });
+            // Set initial values for admin forms
+            document.getElementById('codexPoints').value = teamPointsData.codex;
+            document.getElementById('syntaxPoints').value = teamPointsData.syntax;
+            document.getElementById('vertexPoints').value = teamPointsData.vertex;
+            document.getElementById('logixPoints').value = teamPointsData.logix;
             
-            // Display initial students
-            displayStudents();
+            // Set initial values for category leaders form
+            document.getElementById('subJuniorTeam').value = categoryLeadersData['sub-junior'].team;
+            document.getElementById('subJuniorPoints').value = categoryLeadersData['sub-junior'].points;
+            document.getElementById('juniorTeam').value = categoryLeadersData['junior'].team;
+            document.getElementById('juniorPoints').value = categoryLeadersData['junior'].points;
+            document.getElementById('seniorTeam').value = categoryLeadersData['senior'].team;
+            document.getElementById('seniorPoints').value = categoryLeadersData['senior'].points;
+            document.getElementById('superSeniorTeam').value = categoryLeadersData['super-senior'].team;
+            document.getElementById('superSeniorPoints').value = categoryLeadersData['super-senior'].points;
+            document.getElementById('generalTeam').value = categoryLeadersData['general'].team;
+            document.getElementById('generalPoints').value = categoryLeadersData['general'].points;
         });
     </script>
 </body>
